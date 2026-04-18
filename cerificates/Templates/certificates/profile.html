@@ -1,0 +1,49 @@
+{% extends 'certificates/base.html' %}
+{% block title %}Profile — {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-14">
+
+  <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+
+    <!-- Avatar banner -->
+    <div class="h-32 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+
+    <div class="px-8 pb-8">
+      <!-- Avatar circle -->
+      <div class="w-20 h-20 bg-blue-100 rounded-full border-4 border-white shadow flex items-center justify-center
+                  -mt-10 mb-4 text-blue-600 text-3xl font-extrabold">
+        {{ user.username|slice:":1"|upper }}
+      </div>
+
+      <h1 class="text-2xl font-extrabold text-gray-900 mb-1">{{ user.username }}</h1>
+      <p class="text-gray-500 text-sm mb-1">{{ user.email }}</p>
+      <p class="text-xs text-gray-400">Member since {{ user.date_joined|date:"d M Y" }}</p>
+
+      <!-- Role badge -->
+      <div class="mt-4 mb-8">
+        {% if user.is_superuser %}
+        <span class="bg-purple-100 text-purple-700 text-xs font-bold px-3 py-1 rounded-full">👑 Admin</span>
+        {% elif user.is_staff %}
+        <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">🛡 Staff</span>
+        {% else %}
+        <span class="bg-gray-100 text-gray-600 text-xs font-bold px-3 py-1 rounded-full">👤 User</span>
+        {% endif %}
+      </div>
+
+      <div class="border-t border-gray-100 pt-6 flex flex-wrap gap-3">
+        {% if user.is_superuser or user.is_staff %}
+        <a href="/admin/" class="btn-primary text-sm">⚙ Admin Panel</a>
+        {% endif %}
+        <a href="{% url 'search' %}" class="bg-gray-100 text-gray-700 text-sm font-semibold px-4 py-2 rounded-lg hover:bg-gray-200 transition">
+          📜 Browse Certificates
+        </a>
+        <a href="{% url 'logout' %}" class="bg-red-50 text-red-600 text-sm font-semibold px-4 py-2 rounded-lg hover:bg-red-100 transition">
+          Logout
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

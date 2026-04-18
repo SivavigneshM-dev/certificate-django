@@ -1,0 +1,24 @@
+{
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.2",
+    "tailwindcss": "^4.2.2"
+  },
+  "name": "grzcertificate",
+  "version": "1.0.0",
+  "main": "tailwind.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SivavigneshM-dev/certificate-django.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SivavigneshM-dev/certificate-django/issues"
+  },
+  "homepage": "https://github.com/SivavigneshM-dev/certificate-django#readme",
+  "description": ""
+}

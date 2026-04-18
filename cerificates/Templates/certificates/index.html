@@ -1,0 +1,169 @@
+{% extends 'certificates/base.html' %}
+{% block title %}Grapinz Cert — Home{% endblock %}
+{% block content %}
+
+<!-- ── HERO SLIDER ── -->
+<div class="relative w-full h-[400px] overflow-hidden bg-gray-900">
+  <div id="slider"
+    class="flex h-full transition-transform duration-700 ease-in-out">
+
+    {% for i in "12345" %}
+    <div
+      class="min-w-full h-full flex-shrink-0 flex items-center justify-center relative"
+      style="background: linear-gradient(135deg, #1e3a8a {{ forloop.counter }}0%, #2563eb);"
+    >
+      <div class="text-center text-white px-8 z-10">
+        <p class="text-blue-200 font-semibold uppercase tracking-widest text-sm mb-3">
+          Trusted • Verified • Secure
+        </p>
+        <h1 class="text-5xl font-extrabold leading-tight mb-4">
+          Verify Your<br />Certificate
+        </h1>
+        <p class="text-blue-100 mb-6 text-lg">
+          Instant verification for every achievement.
+        </p>
+        <a href="{% url 'verify' %}"
+          class="inline-block bg-white text-blue-700 font-bold px-8 py-3 rounded-full hover:bg-blue-50 transition">
+          Verify Now →
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Dots -->
+  <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2" id="dots">
+    {% for i in "12345" %}
+    <button onclick="goTo({{ forloop.counter0 }})"
+      class="w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white transition dot"></button>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="max-w-5xl mx-auto px-4 py-16 text-center">
+  <h2 class="text-3xl font-extrabold text-gray-800 mb-2">How It Works</h2>
+  <p class="text-gray-500 mb-10">
+    Three simple steps to verify any certificate.
+  </p>
+
+  <div class="grid md:grid-cols-3 gap-8">
+    {% for step in "123" %}
+    <div class="bg-white rounded-2xl p-6 shadow-md">
+      <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 font-extrabold text-xl flex items-center justify-center mx-auto mb-4">
+        {{ forloop.counter }}
+      </div>
+
+      {% if forloop.counter == 1 %}
+      <h3 class="font-bold text-lg mb-1">Enter Certificate ID</h3>
+      <p class="text-gray-500 text-sm">Paste the UUID from your certificate.</p>
+
+      {% elif forloop.counter == 2 %}
+      <h3 class="font-bold text-lg mb-1">We Check the Database</h3>
+      <p class="text-gray-500 text-sm">
+        Instant lookup against our secure records.
+      </p>
+
+      {% else %}
+      <h3 class="font-bold text-lg mb-1">See Full Details</h3>
+      <p class="text-gray-500 text-sm">
+        Name, course, issued date & status shown.
+      </p>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ── RECENT CERTIFICATES (FINAL FIXED UI ✅) ── -->
+<section class="max-w-6xl mx-auto px-4 pb-16">
+  <div class="flex items-center justify-between mb-8">
+    <h2 class="text-2xl font-bold text-gray-900">
+      Recent Certificates
+    </h2>
+    <a href="{% url 'search' %}"
+      class="text-blue-600 text-sm font-semibold hover:underline">
+      View All →
+    </a>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+    {% for cert in certificates|slice:":6" %}
+
+    <!-- ✅ NEW CARD (UPDATED) -->
+    <a href="{% url 'certificate_detail' cert.certificate_id %}"
+      class="group bg-white rounded-xl shadow-sm hover:shadow-lg transition duration-300 overflow-hidden flex flex-col">
+
+      <!-- ✅ PERFECT 1:1 IMAGE -->
+      <div class="aspect-square overflow-hidden">
+        {% if cert.student_image %}
+        <img src="{{ cert.student_image.url }}"
+          class="w-full h-48 object-cover group-hover:scale-105 transition duration-500" />
+        {% else %}
+        <div class="w-full h-full bg-gradient-to-br from-blue-100 to-blue-300 flex items-center justify-center">
+          <span class="text-3xl font-bold text-blue-500">
+            {{ cert.student_name|slice:":1"|upper }}
+          </span>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- ✅ CONTENT LEFT / RIGHT -->
+      <div class="p-8 flex flex-col gap-4">
+        <div class="flex justify-between items-start">
+
+          <!-- LEFT -->
+          <div class="flex flex-col gap-y-1">
+            <h3 class="font-semibold text-sm text-gray-900 leading-tight">
+              {{ cert.student_name }}
+            </h3>
+            <p class="text-xs text-gray-500">
+              {{ cert.course_title }}
+            </p>
+          </div>
+
+          <!-- RIGHT -->
+          <div class="text-right">
+            <p class="text-[11px] text-gray-400">
+              {{ cert.issue_date|date:"d M Y" }}
+            </p>
+
+            <span
+              class="text-[10px] font-semibold px-2 py-0.5 rounded-full inline-block mt-1
+              {% if cert.status == 'valid' %}
+                bg-green-100 text-green-700
+              {% else %}
+                bg-red-100 text-red-600
+              {% endif %}">
+              {% if cert.status == 'valid' %}✔ Valid{% else %}✖ Revoked{% endif %}
+            </span>
+          </div>
+
+        </div>
+      </div>
+
+    </a>
+
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ── SLIDER SCRIPT ── -->
+<script>
+  let index = 0;
+  const slider = document.getElementById("slider");
+  const dots = document.querySelectorAll(".dot");
+  const total = 5;
+
+  function goTo(i) {
+    index = i;
+    slider.style.transform = `translateX(-${index * 100}%)`;
+    dots.forEach((d, j) => d.classList.toggle("bg-white", i === j));
+    dots.forEach((d, j) => d.classList.toggle("bg-white/40", i !== j));
+  }
+
+  goTo(0);
+  setInterval(() => goTo((index + 1) % total), 3500);
+</script>
+
+{% endblock %}
