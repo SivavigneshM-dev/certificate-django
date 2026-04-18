@@ -9,9 +9,13 @@
 
     {% for i in "12345" %}
     <div
-      class="min-w-full h-full flex-shrink-0 flex items-center justify-center relative"
-      style="background: linear-gradient(135deg, #1e3a8a {{ forloop.counter }}0%, #2563eb);"
-    >
+      class="min-w-full h-full flex-shrink-0 flex items-center justify-center relative
+      {% if forloop.counter == 1 %}bg-gradient-to-br from-slate-900 via-blue-900 to-blue-700
+      {% elif forloop.counter == 2 %}bg-gradient-to-br from-slate-900 via-indigo-900 to-sky-700
+      {% elif forloop.counter == 3 %}bg-gradient-to-br from-slate-900 via-cyan-900 to-sky-700
+      {% elif forloop.counter == 4 %}bg-gradient-to-br from-slate-900 via-violet-900 to-blue-700
+      {% else %}bg-gradient-to-br from-slate-900 via-fuchsia-900 to-purple-700
+      {% endif %}">
       <div class="text-center text-white px-8 z-10">
         <p class="text-blue-200 font-semibold uppercase tracking-widest text-sm mb-3">
           Trusted • Verified • Secure
@@ -34,7 +38,7 @@
   <!-- Dots -->
   <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2" id="dots">
     {% for i in "12345" %}
-    <button onclick="goTo({{ forloop.counter0 }})"
+    <button data-index="{{ forloop.counter0 }}"
       class="w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white transition dot"></button>
     {% endfor %}
   </div>
@@ -153,7 +157,7 @@
   let index = 0;
   const slider = document.getElementById("slider");
   const dots = document.querySelectorAll(".dot");
-  const total = 5;
+  const total = dots.length;
 
   function goTo(i) {
     index = i;
@@ -161,6 +165,10 @@
     dots.forEach((d, j) => d.classList.toggle("bg-white", i === j));
     dots.forEach((d, j) => d.classList.toggle("bg-white/40", i !== j));
   }
+
+  dots.forEach((dot) => {
+    dot.addEventListener("click", () => goTo(Number(dot.dataset.index)));
+  });
 
   goTo(0);
   setInterval(() => goTo((index + 1) % total), 3500);
